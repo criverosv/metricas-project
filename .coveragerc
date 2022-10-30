@@ -1,0 +1,9 @@
+[run]
+branch = True
+omit =
+    env/*
+    fixtures/*
+    *_test.py
+    */test_*.py
+    */__init__.py
+    conftest.py
