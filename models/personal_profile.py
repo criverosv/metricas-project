@@ -2,7 +2,7 @@ from marshmallow import Schema, fields
 from sqlalchemy import Enum, UniqueConstraint
 
 from . import db
-from choices import GenreEnum, IdTypeEnum
+from .choices import GenreEnum, IdTypeEnum
 
 
 class PersonalProfile(db.Model):

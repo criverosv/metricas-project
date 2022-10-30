@@ -3,7 +3,7 @@ from sqlalchemy import Enum, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from . import db
-from choices import SportsEnum
+from .choices import SportsEnum
 
 
 class SportProfile(db.Model):

@@ -3,7 +3,7 @@ from sqlalchemy import Enum, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from . import db
-from choices import AllergyEnum, IntoleranceEnum, FeedingEnum
+from .choices import AllergyEnum, IntoleranceEnum, FeedingEnum
 
 
 class AlimentaryProfile(db.Model):
