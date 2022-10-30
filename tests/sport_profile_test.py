@@ -2,8 +2,8 @@ import json
 
 import pytest
 
-from ..models.choices import SportsEnum
-from ..models.sports_profile import SportProfile
+from models.choices import SportsEnum
+from models.sports_profile import SportProfile
 
 
 def test_obtain_sport_profile_success(test_client, sport_profile):
