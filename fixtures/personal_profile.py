@@ -1,7 +1,7 @@
 import pytest
 
-from ..models.choices import IdTypeEnum, GenreEnum
-from ..models.personal_profile import PersonalProfile
+from models.choices import IdTypeEnum, GenreEnum
+from models.personal_profile import PersonalProfile
 
 
 @pytest.fixture
