@@ -1,7 +1,7 @@
 import pytest
 
-from models.choices import SportsEnum
-from models.sports_profile import SportProfile, Sport
+from ..models.choices import SportsEnum
+from ..models.sports_profile import SportProfile, Sport
 
 
 @pytest.fixture

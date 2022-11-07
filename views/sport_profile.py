@@ -1,9 +1,12 @@
 from flask import request
 from flask_restful import Resource
+from marshmallow import ValidationError
 
-from models.sports_profile import SportProfile, sport_profile_schema, Sport
+from models.sports_profile import SportProfile, sport_profile_schema, Sport, Injury
 
 from models import db
+
+from models.choices import SportsEnum, InjuryEnum
 
 
 class SportResource(Resource):
@@ -17,25 +20,36 @@ class SportResource(Resource):
             return SportResource.error_not_found()
 
     def post(self):
-        validated_data = self.schema.load(request.json)
         try:
-            sports = validated_data.pop("sports", [])
-            sport_profile = SportProfile(**validated_data)
-            db.session.add(sport_profile)
-            db.session.commit()
+            validated_data = self.schema.load(request.json)
+            try:
+                sports = validated_data.pop("sports", [])
+                injuries = validated_data.pop("injuries", [])
+                sport_profile = SportProfile(**validated_data)
+                db.session.add(sport_profile)
+                db.session.commit()
 
-            sports_to_add = []
-            for sport in sports:
-                sport = Sport(sport_name=sport["sport_name"].name)
-                db.session.add(sport)
-                sports_to_add.append(sport)
+                sports_to_add = []
+                injuries_to_add = []
+                for sport in sports:
+                    sport = Sport(sport_name=sport["sport_name"].name)
+                    db.session.add(sport)
+                    sports_to_add.append(sport)
 
-            sport_profile.sports = sports_to_add
-            db.session.commit()
-            return self.schema.dump(sport_profile), 201
-        except Exception as ex:
-            db.session.rollback()
-            return {"msg": "There was an error saving the sport profile"}, 400
+                for injury in injuries:
+                    injury = Injury(injury_name=injury["injury_name"].name)
+                    db.session.add(injury)
+                    injuries_to_add.append(injury)
+
+                sport_profile.sports = sports_to_add
+                sport_profile.injuries = injuries_to_add
+                db.session.commit()
+                return self.schema.dump(sport_profile), 201
+            except Exception as ex:
+                db.session.rollback()
+                return {"msg": "There was an error saving the sport profile"}, 400
+        except ValidationError as err:
+            return {"msg": err.messages}, 400
 
     def put(self, user_id):
         sport_profile = SportProfile.query.filter(SportProfile.user_id == user_id).one_or_none()
@@ -70,3 +84,46 @@ class SportResource(Resource):
     @staticmethod
     def error_not_found():
         return {"msg": "No sport profile found for this user"}, 404
+
+
+class SportParamsResource(Resource):
+
+    def get(self):
+        args = request.args
+        param = args.get("param")
+        if param == "sports":
+            return {sport.name: sport.value for sport in list(SportsEnum)}, 200
+        else:
+            return {"msg": "Error. Wrong param"}, 404
+
+
+class InjuriesParamsResource(Resource):
+
+    def get(self):
+        args = request.args
+        sport = args.get("sport").upper()
+        if sport == SportsEnum.CYCLING.value:
+            return {
+                       InjuryEnum.SINDROME_PALETOFEMORAL.name: InjuryEnum.SINDROME_PALETOFEMORAL.value,
+                       InjuryEnum.ROTULA.name: InjuryEnum.ROTULA.value,
+                       InjuryEnum.TENDINITIS.name: InjuryEnum.TENDINITIS.value,
+                       InjuryEnum.SINDROME_PLICA_MEDIAL.name: InjuryEnum.SINDROME_PLICA_MEDIAL.value,
+                       InjuryEnum.SINDROME_BANDA_ILIOTIBIAL.name: InjuryEnum.SINDROME_BANDA_ILIOTIBIAL.value,
+                       InjuryEnum.OTRA.name: InjuryEnum.OTRA.value,
+                       InjuryEnum.NINGUNA.name: InjuryEnum.NINGUNA.value,
+                   }, 200
+        elif sport == SportsEnum.ATHLETICS.value:
+            return {
+                       InjuryEnum.TORCEDURAS_DISTENSIONES.name: InjuryEnum.TORCEDURAS_DISTENSIONES.value,
+                       InjuryEnum.LESIONES_RODILLA.name: InjuryEnum.LESIONES_RODILLA.value,
+                       InjuryEnum.INFLAMACION_MUSCULAR.name: InjuryEnum.INFLAMACION_MUSCULAR.value,
+                       InjuryEnum.TRAUMATISMOS_TENDON_AQUILES.name: InjuryEnum.TRAUMATISMOS_TENDON_AQUILES.value,
+                       InjuryEnum.DOLOR_HUESO_TIBIA.name: InjuryEnum.DOLOR_HUESO_TIBIA.value,
+                       InjuryEnum.LESIONES_MANGUITO_ROTATORIO.name: InjuryEnum.LESIONES_MANGUITO_ROTATORIO.value,
+                       InjuryEnum.FRACTURAS.name: InjuryEnum.FRACTURAS.value,
+                       InjuryEnum.DISLOCACIONES.name: InjuryEnum.DISLOCACIONES.value,
+                       InjuryEnum.OTRA.name: InjuryEnum.OTRA.value,
+                       InjuryEnum.NINGUNA.name: InjuryEnum.NINGUNA.value,
+                   }, 200
+        else:
+            return {"msg": "Error. Wrong param"}, 404

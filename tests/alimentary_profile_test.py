@@ -2,8 +2,8 @@ import json
 
 import pytest
 
-from models.alimentary_profile import AlimentaryProfile
-from models.choices import FeedingEnum, AllergyEnum, IntoleranceEnum
+from microservices.profile.models.alimentary_profile import AlimentaryProfile
+from microservices.profile.models.choices import FeedingEnum, AllergyEnum, IntoleranceEnum
 
 
 def test_create_alimentary_profile(test_client):

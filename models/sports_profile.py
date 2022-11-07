@@ -3,7 +3,7 @@ from sqlalchemy import Enum, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from . import db
-from .choices import SportsEnum
+from .choices import SportsEnum, InjuryEnum
 
 
 class SportProfile(db.Model):
@@ -14,12 +14,24 @@ class SportProfile(db.Model):
     ftp = db.Column(db.Float)
     vo2_max = db.Column(db.Float)
     user_id = db.Column(db.Integer)
+    injuries = relationship("Injury")
+    hours_of_practice_by_week = db.Column(db.Integer)
 
 
 class Sport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sport_name = db.Column(Enum(SportsEnum))
     sport_profile_id = db.Column(db.Integer, db.ForeignKey("sport_profile.id"))
+
+
+class Injury(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sport_profile_id = db.Column(db.Integer, db.ForeignKey("sport_profile.id"))
+    injury_name = db.Column(Enum(InjuryEnum))
+
+
+class InjurySchema(Schema):
+    injury_name = fields.Enum(InjuryEnum, by_value=True)
 
 
 class SportSchema(Schema):
@@ -29,6 +41,8 @@ class SportSchema(Schema):
 
 class SportProfileSchema(Schema):
     sports = fields.List(fields.Pluck(SportSchema, 'sport_name'))
+    injuries = fields.List(fields.Pluck(InjurySchema, 'injury_name'))
+    hours_of_practice_by_week = fields.Integer()
     ftp = fields.Float()
     vo2_max = fields.Float()
     user_id = fields.Integer()

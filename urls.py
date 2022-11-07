@@ -4,7 +4,7 @@ from views.personal_profile import PersonalResource
 from views.alimentary_profile import AlimentaryResource, AlimentaryParams
 from views.demographic_profile import DemographicParams, DemographicResource
 from views.health_check import HealthCheck
-from views.sport_profile import SportResource
+from views.sport_profile import SportResource, SportParamsResource, InjuriesParamsResource
 
 
 def register_routes(app):
@@ -17,3 +17,5 @@ def register_routes(app):
     api.add_resource(DemographicParams, 'v1/demographic-params/countries')
     api.add_resource(DemographicResource, 'v1/demographic', 'v1/demographic/<int:user_id>')
     api.add_resource(SportResource, 'v1/sport', 'v1/sport/<int:user_id>')
+    api.add_resource(SportParamsResource, 'v1/sport-params')
+    api.add_resource(InjuriesParamsResource, 'v1/injuries')

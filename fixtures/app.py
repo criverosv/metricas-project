@@ -1,6 +1,6 @@
 import pytest
 from flask import Flask
-from models import db as db_
+from ..models import db as db_
 
 
 @pytest.fixture(scope='session')
