@@ -4,6 +4,7 @@ from flask_restful import Resource
 from models import db
 from models.alimentary_profile import AlimentaryProfile, Allergy, Intolerance, alimentary_profile_schema
 from models.choices import AllergyEnum, IntoleranceEnum, FeedingEnum
+from sqlalchemy.exc import IntegrityError
 
 
 class AlimentaryResource(Resource):
@@ -41,7 +42,7 @@ class AlimentaryResource(Resource):
                 intolerance_obj = Intolerance(alimentary_profile_id=alimentary_profile.id, food_intolerance=intolerance)
                 db.session.add(intolerance_obj)
             db.session.commit()
-        except Exception:
+        except Exception as ex:
             db.session.rollback()
             return {"msg": "Error while saving the alimentary profile"}
         return self.schema.dump(alimentary_profile), 201
@@ -74,12 +75,17 @@ class AlimentaryParams(Resource):
 
     def get(self):
         args = request.args
-        param_to_return = args["param"]
-        if param_to_return == "allergies":
-            return {allergy.name: allergy.value for allergy in AllergyEnum}, 200
-        elif param_to_return == "intolerances":
-            return{intolerance.name: intolerance.value for intolerance in IntoleranceEnum}, 200
-        elif param_to_return == "feeding":
-            return {feeding.name: feeding.value for feeding in FeedingEnum}, 200
-        else:
-            return {"msg": "Either allergies, intolerances, or feeding param required"}, 404
+        try:
+            param_to_return = args["param"]
+            if param_to_return == "allergies":
+                return {allergy.name: allergy.value for allergy in AllergyEnum}, 200
+            elif param_to_return == "intolerances":
+                return{intolerance.name: intolerance.value for intolerance in IntoleranceEnum}, 200
+            elif param_to_return == "feeding":
+                return {feeding.name: feeding.value for feeding in FeedingEnum}, 200
+            else:
+                return {"msg": "Either allergies, intolerances, or feeding param required"}, 404
+        except Exception as err:
+            return {"msg": "An exception has ocurred"}, 400
+        except KeyError as e:
+            return {"msg": "Error. This endpoint must receive an argument called param"}
