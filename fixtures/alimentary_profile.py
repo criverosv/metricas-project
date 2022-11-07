@@ -1,7 +1,7 @@
 import pytest
 
-from microservices.profile.models.alimentary_profile import AlimentaryProfile, Allergy, Intolerance
-from microservices.profile.models.choices import AllergyEnum, IntoleranceEnum, FeedingEnum
+from models.alimentary_profile import AlimentaryProfile, Allergy, Intolerance
+from models.choices import AllergyEnum, IntoleranceEnum, FeedingEnum
 
 
 @pytest.fixture

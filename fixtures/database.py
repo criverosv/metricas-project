@@ -1,5 +1,5 @@
 import pytest
-from ..models import db as db_
+from models import db as db_
 
 
 @pytest.fixture(autouse=True)
