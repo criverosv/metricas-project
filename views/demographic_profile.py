@@ -1,5 +1,6 @@
 from flask import request
 from flask_restful import Resource
+from marshmallow import ValidationError
 
 from models import db
 from models.demographic_profile import demographic_profile_schema, DemographicProfile
@@ -11,10 +12,11 @@ class DemographicParams(Resource):
     def get(self):
         args = request.args
         if args:
-            country = args["country"]
-            return get_all_cities_from_country(country), 200
-        else:
-            return get_all_countries(), 200
+            country = args.get("country")
+            if country:
+                return get_all_cities_from_country(country), 200
+            return {"msg": "Error, wrong param"}, 404
+        return get_all_countries(), 200
 
 
 class DemographicResource(Resource):
@@ -25,8 +27,7 @@ class DemographicResource(Resource):
         demographic_profile = DemographicProfile.query.filter(DemographicProfile.user_id == user_id).one_or_none()
         if demographic_profile:
             return self.schema.dump(demographic_profile), 200
-        else:
-            return DemographicResource.error_not_found()
+        return DemographicResource.error_not_found()
 
     def post(self):
         try:
@@ -35,8 +36,11 @@ class DemographicResource(Resource):
             db.session.add(demographic_profile)
             db.session.commit()
             return self.schema.dump(demographic_profile), 201
-        except Exception:
+        except Exception as ex:
             db.session.rollback()
+            return {"msg": "Error creating the demographic profile"}, 400
+        except ValidationError as err:
+            return {"msg": f"Error validating data {err.messages}"}
 
     def put(self, user_id):
         request.json.pop("user_id")
