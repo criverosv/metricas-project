@@ -118,3 +118,10 @@ def test_get_injuries_by_sport(test_client, sport_name):
         assert data == CYCLING_INJURIES
     elif sport_name == "atletismo":
         assert data == ATHLETICS_INJURIES
+
+
+def test_get_injuries_by_sport_no_param(test_client):
+    response = test_client.get(f"profile/v1/injuries", content_type="application/json")
+    assert response.status_code == 400
+    assert response.json
+    assert response.json["msg"] == "Error. Wrong param"
