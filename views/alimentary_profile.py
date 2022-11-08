@@ -86,4 +86,4 @@ class AlimentaryParams(Resource):
             else:
                 return {"msg": "Either allergies, intolerances, or feeding param required"}, 404
         except KeyError as e:
-            return {"msg": "Error. This endpoint must receive an argument called param"}
+            return {"msg": "Error. This endpoint must receive an argument called param"}, 400

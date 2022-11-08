@@ -101,10 +101,10 @@ class InjuriesParamsResource(Resource):
 
     def get(self):
         args = request.args
-        sport = args.get("sport").upper()
+        sport = args.get("sport").upper() if args.get("sport") else None
         if sport == SportsEnum.CYCLING.value:
             return CYCLING_INJURIES, 200
         elif sport == SportsEnum.ATHLETICS.value:
             return ATHLETICS_INJURIES, 200
         else:
-            return {"msg": "Error. Wrong param"}, 404
+            return {"msg": "Error. Wrong param"}, 400

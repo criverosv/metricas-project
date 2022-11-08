@@ -145,3 +145,10 @@ def test_alimentary_params_another_param(test_client):
     response = test_client.get("profile/v1/alimentary-params?param=another-param")
     assert response.status_code == 404
     assert response.json["msg"] == "Either allergies, intolerances, or feeding param required"
+
+
+def test_alimentary_params_no_param(test_client):
+    response = test_client.get("profile/v1/alimentary-params")
+    assert response.status_code == 400
+    assert response.json
+    assert response.json["msg"] == "Error. This endpoint must receive an argument called param"
