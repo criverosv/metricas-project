@@ -6,7 +6,7 @@ from models.sports_profile import SportProfile, sport_profile_schema, Sport, Inj
 
 from models import db
 
-from models.choices import SportsEnum, InjuryEnum
+from models.choices import SportsEnum, ATHLETICS_INJURIES, CYCLING_INJURIES
 
 
 class SportResource(Resource):
@@ -103,27 +103,8 @@ class InjuriesParamsResource(Resource):
         args = request.args
         sport = args.get("sport").upper()
         if sport == SportsEnum.CYCLING.value:
-            return {
-                       InjuryEnum.SINDROME_PALETOFEMORAL.name: InjuryEnum.SINDROME_PALETOFEMORAL.value,
-                       InjuryEnum.ROTULA.name: InjuryEnum.ROTULA.value,
-                       InjuryEnum.TENDINITIS.name: InjuryEnum.TENDINITIS.value,
-                       InjuryEnum.SINDROME_PLICA_MEDIAL.name: InjuryEnum.SINDROME_PLICA_MEDIAL.value,
-                       InjuryEnum.SINDROME_BANDA_ILIOTIBIAL.name: InjuryEnum.SINDROME_BANDA_ILIOTIBIAL.value,
-                       InjuryEnum.OTRA.name: InjuryEnum.OTRA.value,
-                       InjuryEnum.NINGUNA.name: InjuryEnum.NINGUNA.value,
-                   }, 200
+            return CYCLING_INJURIES, 200
         elif sport == SportsEnum.ATHLETICS.value:
-            return {
-                       InjuryEnum.TORCEDURAS_DISTENSIONES.name: InjuryEnum.TORCEDURAS_DISTENSIONES.value,
-                       InjuryEnum.LESIONES_RODILLA.name: InjuryEnum.LESIONES_RODILLA.value,
-                       InjuryEnum.INFLAMACION_MUSCULAR.name: InjuryEnum.INFLAMACION_MUSCULAR.value,
-                       InjuryEnum.TRAUMATISMOS_TENDON_AQUILES.name: InjuryEnum.TRAUMATISMOS_TENDON_AQUILES.value,
-                       InjuryEnum.DOLOR_HUESO_TIBIA.name: InjuryEnum.DOLOR_HUESO_TIBIA.value,
-                       InjuryEnum.LESIONES_MANGUITO_ROTATORIO.name: InjuryEnum.LESIONES_MANGUITO_ROTATORIO.value,
-                       InjuryEnum.FRACTURAS.name: InjuryEnum.FRACTURAS.value,
-                       InjuryEnum.DISLOCACIONES.name: InjuryEnum.DISLOCACIONES.value,
-                       InjuryEnum.OTRA.name: InjuryEnum.OTRA.value,
-                       InjuryEnum.NINGUNA.name: InjuryEnum.NINGUNA.value,
-                   }, 200
+            return ATHLETICS_INJURIES, 200
         else:
             return {"msg": "Error. Wrong param"}, 404
