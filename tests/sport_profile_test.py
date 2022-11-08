@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from models.choices import SportsEnum, InjuryEnum
+from models.choices import SportsEnum, InjuryEnum, ATHLETICS_INJURIES, CYCLING_INJURIES
 from models.sports_profile import SportProfile
 
 
@@ -115,25 +115,6 @@ def test_get_injuries_by_sport(test_client, sport_name):
     data = response.json
     assert isinstance(data, dict)
     if sport_name == "ciclismo":
-        assert data == {
-                       InjuryEnum.SINDROME_PALETOFEMORAL.name: InjuryEnum.SINDROME_PALETOFEMORAL.value,
-                       InjuryEnum.ROTULA.name: InjuryEnum.ROTULA.value,
-                       InjuryEnum.TENDINITIS.name: InjuryEnum.TENDINITIS.value,
-                       InjuryEnum.SINDROME_PLICA_MEDIAL.name: InjuryEnum.SINDROME_PLICA_MEDIAL.value,
-                       InjuryEnum.SINDROME_BANDA_ILIOTIBIAL.name: InjuryEnum.SINDROME_BANDA_ILIOTIBIAL.value,
-                       InjuryEnum.OTRA.name: InjuryEnum.OTRA.value,
-                       InjuryEnum.NINGUNA.name: InjuryEnum.NINGUNA.value,
-                   }
+        assert data == CYCLING_INJURIES
     elif sport_name == "atletismo":
-        assert data == {
-                       InjuryEnum.TORCEDURAS_DISTENSIONES.name: InjuryEnum.TORCEDURAS_DISTENSIONES.value,
-                       InjuryEnum.LESIONES_RODILLA.name: InjuryEnum.LESIONES_RODILLA.value,
-                       InjuryEnum.INFLAMACION_MUSCULAR.name: InjuryEnum.INFLAMACION_MUSCULAR.value,
-                       InjuryEnum.TRAUMATISMOS_TENDON_AQUILES.name: InjuryEnum.TRAUMATISMOS_TENDON_AQUILES.value,
-                       InjuryEnum.DOLOR_HUESO_TIBIA.name: InjuryEnum.DOLOR_HUESO_TIBIA.value,
-                       InjuryEnum.LESIONES_MANGUITO_ROTATORIO.name: InjuryEnum.LESIONES_MANGUITO_ROTATORIO.value,
-                       InjuryEnum.FRACTURAS.name: InjuryEnum.FRACTURAS.value,
-                       InjuryEnum.DISLOCACIONES.name: InjuryEnum.DISLOCACIONES.value,
-                       InjuryEnum.OTRA.name: InjuryEnum.OTRA.value,
-                       InjuryEnum.NINGUNA.name: InjuryEnum.NINGUNA.value,
-                   }
+        assert data == ATHLETICS_INJURIES
