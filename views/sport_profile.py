@@ -47,7 +47,7 @@ class SportResource(Resource):
                 return self.schema.dump(sport_profile), 201
             except Exception as ex:
                 db.session.rollback()
-                return {"msg": "There was an error saving the sport profile"}, 400
+                return {"msg": f"There was an error saving the sport profile. Exception {ex}"}, 400
         except ValidationError as err:
             return {"msg": err.messages}, 400
 
@@ -77,7 +77,7 @@ class SportResource(Resource):
                 return self.schema.dump(sport_profile), 200
             except Exception as ex:
                 db.session.rollback()
-                return {"msg": "Error updating the sport profile for this user"}, 400
+                return {"msg": f"Error updating the sport profile for this user. Exception: {ex}"}, 400
         else:
             return SportResource.error_not_found()
 
