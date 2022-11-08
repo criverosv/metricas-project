@@ -85,7 +85,5 @@ class AlimentaryParams(Resource):
                 return {feeding.name: feeding.value for feeding in FeedingEnum}, 200
             else:
                 return {"msg": "Either allergies, intolerances, or feeding param required"}, 404
-        except Exception as err:
-            return {"msg": "An exception has ocurred"}, 400
         except KeyError as e:
             return {"msg": "Error. This endpoint must receive an argument called param"}
