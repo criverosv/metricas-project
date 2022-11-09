@@ -36,7 +36,7 @@ class DemographicResource(Resource):
             db.session.add(demographic_profile)
             db.session.commit()
             return self.schema.dump(demographic_profile), 201
-        except Exception as ex:
+        except Exception:
             db.session.rollback()
             return {"msg": "Error creating the demographic profile"}, 400
         except ValidationError as err:

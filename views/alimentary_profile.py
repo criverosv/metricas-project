@@ -42,7 +42,7 @@ class AlimentaryResource(Resource):
                 intolerance_obj = Intolerance(alimentary_profile_id=alimentary_profile.id, food_intolerance=intolerance)
                 db.session.add(intolerance_obj)
             db.session.commit()
-        except Exception as ex:
+        except Exception:
             db.session.rollback()
             return {"msg": "Error while saving the alimentary profile"}
         return self.schema.dump(alimentary_profile), 201
@@ -85,5 +85,5 @@ class AlimentaryParams(Resource):
                 return {feeding.name: feeding.value for feeding in FeedingEnum}, 200
             else:
                 return {"msg": "Either allergies, intolerances, or feeding param required"}, 404
-        except KeyError as e:
+        except KeyError:
             return {"msg": "Error. This endpoint must receive an argument called param"}, 400
