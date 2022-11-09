@@ -8,7 +8,7 @@ from models.choices import MALE_ITEM, FEMALE_ITEM, \
 from models.personal_profile import PersonalProfile
 
 fake = Faker()
-
+APP_JSON = "application/json"
 
 def test_create_personal_profile(test_client):
     params = {
@@ -23,7 +23,7 @@ def test_create_personal_profile(test_client):
         "user_id": random.choice(range(1, 1000000)),
     }
 
-    APP_JSON = "application/json"
+    
     response = test_client.post("profile/v1/personal", data=json.dumps(params), content_type=APP_JSON)
     assert response.status_code == 201, "This should be the status code returned after the profile has been created"
 
