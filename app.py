@@ -8,7 +8,6 @@ from urls import register_routes
 
 app = Flask(__name__)
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/profiles.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://' + os.environ.get('POSTGRES_USER')+':' + os.environ.get('POSTGRES_PASSWORD')+'@' + os.environ.get('POSTGRES_HOST')+':' + os.environ.get('POSTGRES_PORT')+'/' + os.environ.get('POSTGRES_DB')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'super-secret-key'
