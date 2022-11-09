@@ -22,7 +22,9 @@ def test_create_personal_profile(test_client):
         "height": random.choice(range(10, 99)),
         "user_id": random.choice(range(1, 1000000)),
     }
-    response = test_client.post("profile/v1/personal", data=json.dumps(params), content_type="application/json")
+
+    APP_JSON = "application/json"
+    response = test_client.post("profile/v1/personal", data=json.dumps(params), content_type=APP_JSON)
     assert response.status_code == 201, "This should be the status code returned after the profile has been created"
 
     personal_profile = PersonalProfile.query.filter(PersonalProfile.user_id==params["user_id"]).one_or_none()
@@ -39,7 +41,7 @@ def test_update_personal_profile(test_client, personal_profile):
     }
     response = test_client.put(f"profile/v1/personal/{personal_profile.user_id}",
                                data=json.dumps(params),
-                               content_type="application/json")
+                               content_type=APP_JSON)
     assert response.status_code == 200, "The update was success"
     assert response.json
 
@@ -52,7 +54,7 @@ def test_update_personal_profile(test_client, personal_profile):
 
 
 def test_obtain_personal_profile(test_client, personal_profile):
-    response = test_client.get(f"profile/v1/personal/{personal_profile.user_id}", content_type="application/json")
+    response = test_client.get(f"profile/v1/personal/{personal_profile.user_id}", content_type=APP_JSON)
     assert response.status_code == 200
     assert response.json
     data = response.json
@@ -69,7 +71,7 @@ def test_obtain_personal_profile(test_client, personal_profile):
 
 
 def test_obtain_personal_profile_not_found(test_client):
-    response = test_client.get(f"profile/v1/personal/{1000000000}", content_type="application/json")
+    response = test_client.get(f"profile/v1/personal/{1000000000}", content_type=APP_JSON)
     assert response.status_code == 404
     assert response.json["msg"] == "Not personal profile found for the id provided"
 
@@ -79,6 +81,6 @@ def test_update_personal_profile_not_found(test_client):
         "weight": 60,
     }
     response = test_client.put(f"profile/v1/personal/{1000000000}", data=json.dumps(params),
-                               content_type="application/json")
+                               content_type=APP_JSON)
     assert response.status_code == 404
     assert response.json["msg"] == "Not personal profile found for the id provided"
